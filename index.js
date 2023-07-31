@@ -18,6 +18,10 @@ app.get("/", (req, res) => {
   res.download(next);
 });
 
+app.get("/config", (req, res) => {
+  res.download("config.xml");
+});
+
 app.listen(port, () => {
   console.log(`Dummy server listening on port ${port}`);
 });
