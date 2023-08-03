@@ -4,6 +4,8 @@ const firstnames = require("./firstnames.json");
 const surnames = require("./surnames.json");
 
 const app = express();
+app.use(express.json());
+
 const port = 5000;
 
 const makeid = (length) => {
@@ -91,6 +93,28 @@ app.get("/", (req, res) => {
   entries = updateEntries(entries);
   let xml = createEntryXML(entries);
   res.send(xml);
+});
+
+app.put("/", (req, res) => {
+  console.log("RECEIVED PUT", req.body);
+  let entries = getEntries();
+  console.log(entries);
+
+  let newEntry = req.body;
+  let foundEntryIndex = entries.findIndex(
+    (findEntry) => findEntry.id == newEntry.id
+  );
+
+  if (newEntry.id && foundEntryIndex != -1) {
+    entries[foundEntryIndex] = newEntry;
+  } else {
+    if (!newEntry.id) newEntry.id = makeid(8);
+    entries.push(newEntry);
+  }
+
+  let data = JSON.stringify(entries);
+  fs.writeFileSync("entries.json", data);
+  return res.send();
 });
 
 app.listen(port, () => {
