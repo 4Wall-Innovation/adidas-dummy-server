@@ -26,7 +26,7 @@ const updateEntries = (entries) => {
   let newEntryCount = Math.floor(Math.random() * 10);
   for (let index = 0; index < newEntryCount; index++) {
     let newEntry = {
-      id: makeid(8),
+      adidasid: makeid(8),
       name: firstnames[Math.floor(Math.random() * firstnames.length)],
       surname: surnames[Math.floor(Math.random() * surnames.length)],
       game1: "",
@@ -102,13 +102,13 @@ app.put("/", (req, res) => {
 
   let newEntry = req.body;
   let foundEntryIndex = entries.findIndex(
-    (findEntry) => findEntry.id == newEntry.id
+    (findEntry) => findEntry.adidasid == newEntry.adidasid
   );
 
   if (newEntry.id && foundEntryIndex != -1) {
     entries[foundEntryIndex] = newEntry;
   } else {
-    if (!newEntry.id) newEntry.id = makeid(8);
+    if (!newEntry.adidasid) newEntry.adidasid = makeid(8);
     entries.push(newEntry);
   }
 
