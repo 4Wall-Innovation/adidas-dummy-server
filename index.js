@@ -33,7 +33,7 @@ const updateEntries = (entries) => {
       game2: "",
       game3: "",
       total: 0,
-      timestamp: Date.now(),
+      timestampend: Date.now(),
     };
     entries.push(newEntry);
   }
