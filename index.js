@@ -45,11 +45,11 @@ const updateEntries = (entries) => {
     if (!entry.total && Math.random() < 0.7) {
       updateCount++;
       if (entry.game1 == "")
-        entry.game1 = Math.floor(Math.random() * 20 * 1000);
+        entry.game1 = Math.floor(Math.random() * 200 * 1000);
       else if (entry.game2 == "")
-        entry.game2 = Math.floor(Math.random() * 20 * 1000);
+        entry.game2 = Math.floor(Math.random() * 200 * 1000);
       else if (entry.game3 == "") {
-        entry.game3 = Math.floor(Math.random() * 20 * 1000);
+        entry.game3 = Math.floor(Math.random() * 200 * 1000);
         entry.total = Math.floor(
           1000000 / entry.game1 + 1000000 / entry.game2 + 1000000 / entry.game3
         );
