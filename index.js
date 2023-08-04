@@ -6,7 +6,7 @@ const surnames = require("./surnames.json");
 const app = express();
 app.use(express.json());
 
-const port = 5000;
+const port = 5050;
 
 const makeid = (length) => {
   let result = "";
@@ -33,7 +33,7 @@ const updateEntries = (entries) => {
       game2: "",
       game3: "",
       total: 0,
-      timestampend: Date.now(),
+      timestampEnd: Date.now(),
     };
     entries.push(newEntry);
   }
@@ -57,7 +57,7 @@ const updateEntries = (entries) => {
         );
         newCompletedCount++;
       }
-      entry.timestamp = Date.now();
+      entry.timestampEnd = Date.now();
     }
   }
   console.log(`Updated ${updateCount} entries`);
