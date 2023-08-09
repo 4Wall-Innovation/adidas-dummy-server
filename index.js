@@ -104,8 +104,9 @@ app.put("/", (req, res) => {
   let foundEntryIndex = entries.findIndex(
     (findEntry) => findEntry.adidasid == newEntry.adidasid
   );
+  if (!!newEntry.total) newEntry.timestampEnd = Date.now();
 
-  if (newEntry.id && foundEntryIndex != -1) {
+  if (newEntry.adidasid && foundEntryIndex != -1) {
     entries[foundEntryIndex] = newEntry;
   } else {
     if (!newEntry.adidasid) newEntry.adidasid = makeid(8);
