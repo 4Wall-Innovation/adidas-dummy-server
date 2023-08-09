@@ -16,14 +16,14 @@ const makeid = (length) => {
   return result;
 };
 
-const addEntry = async (total) => {
+const addEntry = async (score) => {
   let entry = {
     adidasid: makeid(8),
     name: firstnames[Math.floor(Math.random() * firstnames.length)],
     surname: surnames[Math.floor(Math.random() * surnames.length)],
-    game1: total,
-    game2: total,
-    game3: total,
+    game1: score,
+    game2: score,
+    game3: score,
     wristid: makeid(8),
   };
   console.log(entry);
