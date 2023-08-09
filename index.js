@@ -21,20 +21,43 @@ const makeid = (length) => {
   return result;
 };
 
-const updateEntries = (entries) => {
-  //Add new entries
-  let newEntryCount = Math.floor(Math.random() * 10);
-  for (let index = 0; index < newEntryCount; index++) {
-    let newEntry = {
+const generateNewEntry = (completed = false) => {
+  if (completed) {
+    let entry = {
+      adidasid: makeid(8),
+      name: firstnames[Math.floor(Math.random() * firstnames.length)],
+      surname: surnames[Math.floor(Math.random() * surnames.length)],
+      game1: Math.floor(Math.random() * 200 * 10),
+      game2: Math.floor(Math.random() * 200 * 10),
+      game3: Math.floor(Math.random() * 200 * 10),
+      wristid: makeid(8),
+    };
+    entry.total = Math.floor(
+      1000000 / entry.game1 + 1000000 / entry.game2 + 1000000 / entry.game3
+    );
+    entry.badge = entry.total >= 3500 ? 2 : entry.total >= 2500 ? 1 : 0;
+    entry.timestampEnd = Date.now();
+    return entry;
+  } else {
+    return {
       adidasid: makeid(8),
       name: firstnames[Math.floor(Math.random() * firstnames.length)],
       surname: surnames[Math.floor(Math.random() * surnames.length)],
       game1: "",
       game2: "",
       game3: "",
-      total: 0,
+      total: "",
+      badge: "",
       timestampEnd: Date.now(),
     };
+  }
+};
+
+const updateEntries = (entries) => {
+  //Add new entries
+  let newEntryCount = Math.floor(Math.random() * 10);
+  for (let index = 0; index < newEntryCount; index++) {
+    let newEntry = generateNewEntry();
     entries.push(newEntry);
   }
   console.log(`Added ${newEntryCount} new entries`);
@@ -55,9 +78,10 @@ const updateEntries = (entries) => {
         entry.total = Math.floor(
           1000000 / entry.game1 + 1000000 / entry.game2 + 1000000 / entry.game3
         );
+        entry.badge = entry.total >= 3500 ? 2 : entry.total >= 2500 ? 1 : 0;
         newCompletedCount++;
+        entry.timestampEnd = Date.now();
       }
-      entry.timestampEnd = Date.now();
     }
   }
   console.log(`Updated ${updateCount} entries`);
@@ -90,7 +114,17 @@ const createEntryXML = (entries) => {
 
 app.get("/", (req, res) => {
   let entries = getEntries();
-  entries = updateEntries(entries);
+  let xml = createEntryXML(entries);
+  res.send(xml);
+});
+
+app.put("/random", (req, res) => {
+  console.log("random");
+  let entries = getEntries();
+  let newEntry = generateNewEntry(true);
+  entries.push(newEntry);
+  let data = JSON.stringify(entries);
+  fs.writeFileSync("entries.json", data);
   let xml = createEntryXML(entries);
   res.send(xml);
 });
@@ -104,7 +138,21 @@ app.put("/", (req, res) => {
   let foundEntryIndex = entries.findIndex(
     (findEntry) => findEntry.adidasid == newEntry.adidasid
   );
-  if (!!newEntry.total) newEntry.timestampEnd = Date.now();
+
+  if (
+    !!newEntry.game1 &&
+    !!newEntry.game2 &&
+    !!newEntry.game3 &&
+    !newEntry.total
+  ) {
+    newEntry.total = Math.floor(
+      1000000 / newEntry.game1 +
+        1000000 / newEntry.game2 +
+        1000000 / newEntry.game3
+    );
+    newEntry.badge = newEntry.total > 3500 ? 2 : newEntry.total > 2500 ? 1 : 0;
+    newEntry.timestampEnd = Date.now();
+  }
 
   if (newEntry.adidasid && foundEntryIndex != -1) {
     entries[foundEntryIndex] = newEntry;
